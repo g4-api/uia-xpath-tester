@@ -92,6 +92,9 @@ jobs:
     #   shell: pwsh
     #   run: dotnet publish -c Release --self-contained -r win-x64
 
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
     # Step to publish the project
     - name: Publish
       shell: pwsh
