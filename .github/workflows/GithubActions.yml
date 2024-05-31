@@ -87,11 +87,7 @@ jobs:
       shell: pwsh
       run: dotnet restore
 
-    # # Step to publish the project
-    # - name: Publish
-    #   shell: pwsh
-    #   run: dotnet publish -c Release --self-contained -r win-x64
-
+    # Add msbuild to PATH to ensure that MSBuild is available for the build and publish steps
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v2
 
