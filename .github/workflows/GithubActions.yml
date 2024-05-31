@@ -1,5 +1,5 @@
-# Workflow to build and release OcrInspector for production
-name: OCR Inspector Production
+# Workflow to build and release UiaXpathTester for production
+name: Build & Release
 
 # Permissions for the workflow
 permissions:
