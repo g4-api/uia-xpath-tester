@@ -87,18 +87,22 @@ jobs:
       shell: pwsh
       run: dotnet restore
 
+    # # Step to publish the project
+    # - name: Publish
+    #   shell: pwsh
+    #   run: dotnet publish -c Release --self-contained -r win-x64
+
     # Step to publish the project
     - name: Publish
       shell: pwsh
-      run: dotnet publish -c Release --self-contained -r win-x64
+      run: msbuild ${{ env.projectName }}.sln /t:Publish /p:Configuration=Release /p:PublishDir=${{ env.binariesDirectory }}/publish/
 
     # Step to create a build artifact
     - name: Create Build Artifact
       shell: pwsh
       run: |
-        New-Item -Path "${{ env.artifactStagingDirectory }}" -ItemType Directory
         Compress-Archive `
-            -Path ${{ env.projectName }}/bin/Release/net8.0-windows/win-x64./publish/* `
+            -Path ${{ env.binariesDirectory }}/publish/* `
             -DestinationPath ${{ env.artifactStagingDirectory }}/${{ env.projectName }}.${{ env.buildVersion }}-win-x64.zip 
 
     # Step to upload the build artifact
