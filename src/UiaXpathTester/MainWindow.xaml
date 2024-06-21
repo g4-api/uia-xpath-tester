@@ -66,5 +66,11 @@
                Name="LblStatus"
                Width="330"
                Visibility="Visible" />
+
+        <StatusBar VerticalAlignment="Bottom" Name="StatusBar">
+            <StatusBarItem>
+                <TextBlock Name="TxtElapsedTime" Text="Elapsed Time: 0 ms"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

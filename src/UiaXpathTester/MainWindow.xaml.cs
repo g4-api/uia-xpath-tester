@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
@@ -29,11 +29,7 @@ namespace UiaXpathTester
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Event handler for the "Test XPath" button click.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event arguments.</param>
+        // Event handler for the "Test XPath" button click.
         private async void BtnTestXpath_Click(object sender, RoutedEventArgs e)
         {
             // Update UI to show "Working..."
@@ -43,28 +39,33 @@ namespace UiaXpathTester
                 DtaElementData.Visibility = Visibility.Hidden;
                 BtnTestXpath.IsEnabled = false;
                 LblStatus.Content = "Working...";
+                TxtElapsedTime.Text = "";
             }));
+
+            // Start the stopwatch to measure elapsed time
+            var stopwatch = Stopwatch.StartNew();
 
             // Perform the actual logic asynchronously
             await Task.Run(() => PublishDataGrid(mainWindow: this));
 
-            // Update UI to revert changes
+            // Stop the stopwatch
+            stopwatch.Stop();
+
+            // Update UI to revert changes and show elapsed time
             await Dispatcher.BeginInvoke(new Action(() =>
             {
                 LblStatus.Visibility = Visibility.Hidden;
                 DtaElementData.Visibility = Visibility.Visible;
                 BtnTestXpath.IsEnabled = true;
+                TxtElapsedTime.Text = $"Elapsed Time: {stopwatch.ElapsedMilliseconds} ms";
             }));
         }
 
-        /// <summary>
-        /// Publishes data from a DataGrid using the specified XPath in the provided MainWindow.
-        /// </summary>
-        /// <param name="mainWindow">The MainWindow instance where the DataGrid and XPath TextBox are located.</param>
-        private static void PublishDataGrid(MainWindow mainWindow)
+        // Publishes data from a DataGrid using the specified XPath in the provided MainWindow.
+        private static async Task PublishDataGrid(MainWindow mainWindow)
         {
             // Use the dispatcher to execute the operation on the UI thread.
-            mainWindow.Dispatcher.BeginInvoke(() =>
+            await mainWindow.Dispatcher.BeginInvoke(() =>
             {
                 // Create a new UI Automation instance.
                 var automation = new CUIAutomation8();
